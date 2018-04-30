@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>RSS Feed Reader</title>
+
+		<style>
+			.div-ellipsis {
+			    white-space: nowrap;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			}
+
+			.feed-card {
+				border: thin solid #ddd;
+				box-shadow: 0.3rem 0.3rem 0.3rem #eee;
+			}
+
+			.main-content {
+				overflow: auto;
+				max-height: 75vh;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-dark bg-dark mb-3">
+			<span class="navbar-brand mb-0 h1">RSS Feed Reader</span>
+			<form class="form-inline" method="POST">
+				<input class="form-control mr-sm-2" type="search" name="sourceURL" placeholder="RSS URL">
+			</form>
+		</nav>
+		<div class="container">
+			{% if rss_feed.error != None %}
+				<h5 class="text-danger text-center">{{ rss_feed.error }}</h5>
+			{% else %}
+				<h2 class="mb-2">{{ rss_feed.title }}</h2>
+				<div class="main-content">
+					{% for entry in rss_feed.entries %}
+						<div class="container row px-1 py-2 my-2 mx-0 feed-card">
+							{% if entry.media_thumbnail %}
+								<div class="col-3">
+									<img src="{{ entry.media_thumbnail[0].url }}" class="w-100">
+								</div>
+							{% endif %}
+
+							<div class="col">
+								<div class="h5 div-ellipsis">
+									<a href="{{ entry.link }}" target="_blank"
+									   title="{{ entry.title }}"
+									   data-toggle="tooltip">{{ entry.title }}</a>
+								</div>
+								{{ entry.summary }}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+
+		<!-- scripts and styles here -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script>
+			$(function () {
+				$('[data-toggle="tooltip"]').tooltip()
+			})
+		</script>
+	</body>
+</html>
